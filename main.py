@@ -71,18 +71,22 @@ def main():
     img2_path = sys.argv[3]
     img2_points_path = sys.argv[4]
 
-    img1_pts = read_points(img1_points_path)
-    img2_pts = read_points(img2_points_path)
-
-    H = compute_homography(img1_pts, img2_pts)
-
     img1 = cv2.imread(img1_path)
     img2 = cv2.imread(img2_path)
 
+    img1_dim = (img1.shape[1], img1.shape[0])
+    img2_dim = (img2.shape[1], img2.shape[0])
+
+    img1_pts = read_points(img1_points_path, img1_dim)
+    img2_pts = read_points(img2_points_path, img2_dim)
+
+    H = compute_homography(img1_pts, img2_pts)
+    
     img1_warped = warp_image(img1, H)
 
     cv2.imwrite("res/warped.png", img1_warped)
 
+    return
     H_1 = np.linalg.inv(H)
 
     transformed_points = []

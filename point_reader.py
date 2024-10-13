@@ -39,6 +39,9 @@ def read_points(filename, dim=(1,1)):
     points = np.array(points)
     points = scale_points(points, dim)
 
+    if (dim == (1,1)):
+        print("didnt normalize points")
+
     return points
 
 def write_points(points, filename):
