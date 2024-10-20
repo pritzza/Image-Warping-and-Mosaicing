@@ -14,14 +14,14 @@ def rectify_image(img, points, dim):
 
 def main():
     if (len(sys.argv) != 6):
-        print("Usage: python <script_name.py> <img1_path> <img1_points_path> <width> <height> <out_name>")
+        print("Usage: python <script_name.py> <out_name> <img1_path> <img1_points_path> <width> <height>")
         return 
     
-    img_path = sys.argv[1]
-    img_points_path = sys.argv[2]
-    width = int(sys.argv[3])
-    height = int(sys.argv[4])
-    out_name = sys.argv[5]
+    out_name = sys.argv[1]
+    img_path = sys.argv[2]
+    img_points_path = sys.argv[3]
+    width = int(sys.argv[4])
+    height = int(sys.argv[5])
 
     img = cv2.imread(img_path)
     img_dim = (img.shape[1], img.shape[0])

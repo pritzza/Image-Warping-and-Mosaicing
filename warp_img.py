@@ -4,38 +4,19 @@ import cv2
 
 from point_reader import read_points
 
-def lerp(a, b, t):
-    return a + (b - a) * t
-
-def bilinear_interpolate(x, y, img):
-    x0 = int(x)
-    y0 = int(y)
-    x1 = x0 + 1
-    y1 = y0 + 1
-
-    if x0 < 0 or y0 < 0 or x1 >= img.shape[1] or y1 >= img.shape[0]:
-        return 0 
-
-    top_interp = lerp(img[y0, x0], img[y0, x1], x - x0)
-    bot_interp = lerp(img[y1, x0], img[y1, x1], x - x0)
-    interpolated = lerp(top_interp, bot_interp, y - y0)
-
-    return np.clip(interpolated, 0, 255).astype(np.uint8)
-
 # args are n*2 martices
-def compute_homography(im1_pts, im2_pts):
-    assert len(im1_pts) == len(im2_pts), "Number of points must match"
-    assert len(im1_pts) >= 4, "At least 4 points are required"
+def compute_homography(img1_pts, img2_pts):
+    assert len(img1_pts) == len(img2_pts), "Number of points must match"
+    assert len(img1_pts) >= 4, "At least 4 points are required"
 
-    n = len(im1_pts)
+    n = len(img1_pts)
 
-    # Create the A matrix (2n x 8) and b vector (2n x 1)
     A = []
     b = []
 
     for i in range(n):
-        x, y = im1_pts[i]       # Coordinates in image 1
-        x_prime, y_prime = im2_pts[i]  # Corresponding coordinates in image 2
+        x, y = img1_pts[i]
+        x_prime, y_prime = img2_pts[i]
 
         # First equation (x' = ...)
         A.append([x, y, 1, 0, 0, 0, -x_prime * x, -x_prime * y])
@@ -45,13 +26,12 @@ def compute_homography(im1_pts, im2_pts):
         A.append([0, 0, 0, x, y, 1, -y_prime * x, -y_prime * y])
         b.append(y_prime)
 
-    A = np.array(A)  # Convert A into a numpy array (2n x 8)
-    b = np.array(b)  # Convert b into a numpy array (2n x 1)
+    A = np.array(A)  # convert A to 2n x 8
+    b = np.array(b)  # Convert b to 2n x 1
 
     # Solve for the unknown h vector using least squares (h has 8 elements)
     h, residuals, rank, s = np.linalg.lstsq(A, b, rcond=None)
 
-    # Reshape the h vector into a 3x3 homography matrix, where the last element is 1
     H = np.array([
         [h[0], h[1], h[2]],
         [h[3], h[4], h[5]],
@@ -98,7 +78,7 @@ def compute_warped_image_bb(img, H):
     return dim, displacement
 
 # TODO: update to use scipy.interpolate.griddata
-def warp_image(img, H, sampling="nearest", crop=True):
+def warp_image(img, H, crop=True):
 
     dim = (img.shape[1], img.shape[0])
     disp = (0, 0)
@@ -119,13 +99,9 @@ def warp_image(img, H, sampling="nearest", crop=True):
             src_x, src_y = p[0] / w, p[1] / w
 
             if 0 <= src_x < img.shape[1] and 0 <= src_y < img.shape[0]:
-                if sampling == "nearest":
-                    src_x, src_y = int(src_x), int(src_y)
-                    warped_img[y, x] = img[src_y, src_x]
-                elif sampling == "bilinear":
-                    warped_img[y, x] = bilinear_interpolate(src_x, src_y, img)
-                else:
-                    raise ValueError(f"Unknown sampling method: {sampling}")
+                # just nearest-neighbor sampling, needs to be improved
+                src_x, src_y = int(src_x), int(src_y)
+                warped_img[y, x] = img[src_y, src_x]
 
     return warped_img
 
@@ -155,7 +131,7 @@ def main():
     print("warping...")
 
     # warp img1 to have view of img2
-    img1_warped = warp_image(img1, H, "nearest")
+    img1_warped = warp_image(img1, H)
 
     cv2.imwrite(f"results/{out_name}.png", img1_warped)
     print(f"Saved warped image to results/{out_name}.png")
