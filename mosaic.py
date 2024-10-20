@@ -5,7 +5,7 @@ import cv2
 from point_reader import read_points
 from warp_img import compute_homography, warp_image, compute_warped_image_bb
 from multi_resolution_blending import multi_resolution_blend_images
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import binary_fill_holes, distance_transform_edt
 
 def blend_images(img1_warped, img2, disp):
     dx, dy = disp
@@ -29,18 +29,16 @@ def blend_images(img1_warped, img2, disp):
 
     img1_pano_mask = np.zeros((panorama_height, panorama_width), dtype=np.float32)
     img2_pano_mask = np.zeros((panorama_height, panorama_width), dtype=np.float32)
-    mask_img1 = np.any(img1_warped != 0, axis=2).astype(np.uint8)  # Mask where img1_warped has valid pixels
-    mask_img2 = np.any(img2 != 0, axis=2).astype(np.uint8)         # Mask where img2 has valid pixels
+    mask_img1 = np.any(img1_warped != 0, axis=2).astype(np.uint8)
+    mask_img1 = binary_fill_holes(mask_img1).astype(np.uint8)
+    mask_img2 = np.ones_like(img2[:,:,0], dtype=np.uint8)      
     img1_pano_mask[y_start:y_end, x_start:x_end] = mask_img1
     img2_pano_mask[shift_y:shift_y + img2.shape[0], shift_x:shift_x + img2.shape[1]] = mask_img2
-    img1_dist_mask = distance_transform_edt(img1_pano_mask)  # Distance from non-zero (foreground) to zero
-    img2_dist_mask = distance_transform_edt(img2_pano_mask)  # Same for img2
+    img1_dist_mask = distance_transform_edt(img1_pano_mask) 
+    img2_dist_mask = distance_transform_edt(img2_pano_mask) 
 
     overlap_mask = img1_dist_mask > img2_dist_mask
     overlap_mask = overlap_mask.astype(np.float32)
-
-    cv2.imwrite("results/TEST_p1.png", img1_panorama)
-    cv2.imwrite("results/TEST_p2.png", img2_panorama)
 
     return multi_resolution_blend_images(img1_panorama, img2_panorama, overlap_mask, 2, 10)
 

@@ -18,8 +18,9 @@ def bilinear_interpolate(x, y, img):
 
     top_interp = lerp(img[y0, x0], img[y0, x1], x - x0)
     bot_interp = lerp(img[y1, x0], img[y1, x1], x - x0)
-    
-    return lerp(top_interp, bot_interp, y - y0)
+    interpolated = lerp(top_interp, bot_interp, y - y0)
+
+    return np.clip(interpolated, 0, 255).astype(np.uint8)
 
 # args are n*2 martices
 def compute_homography(im1_pts, im2_pts):
