@@ -53,7 +53,7 @@ Next, you want to warp the images using `warp_img.py`.
 Run the following command:
 
 ```bash
-python warp_img.py cal_warped res/cal_l.png res/cal_l.points res/cal_r.png res/cal_r.points
+python warp_img.py cal_warped res/cal_l.png res/points/cal_l.points res/cal_r.png res/points/cal_r.points
 ```
 
 This will save the warped image as `results/cal_warped.png`.
@@ -63,13 +63,13 @@ If you want to skip the warping step, you can go straight to image mosaicing usi
 To do that, run:
 
 ```bash
-python mosaic.py cal_mosaic res/cal_l.png res/cal_l.points res/cal_r.png res/cal_r.points
+python mosaic.py cal_mosaic res/cal_l.png res/points/cal_l.points res/cal_r.png res/points/cal_r.points
 ```
 
 Or, if you want to reuse the warped image from the previous step to save time, run:
 
 ```bash
-python mosaic.py cal_mosaic res/cal_l.png res/cal_l.points res/cal_r.png res/cal_r.points res/cal_warped.png
+python mosaic.py cal_mosaic res/cal_l.png res/points/cal_l.points res/cal_r.png res/points/cal_r.points res/cal_warped.png
 ```
 
 This will save the mosaiced image as `results/cal_mosaic.png`.
