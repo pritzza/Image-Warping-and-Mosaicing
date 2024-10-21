@@ -37,7 +37,7 @@ def pick_points(im_path):
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python script_name.py <image_filename>")
+        print("Usage: python point_picker.py <image_filename>")
         sys.exit(1)
 
     image_path = sys.argv[1]

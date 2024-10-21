@@ -44,7 +44,7 @@ def blend_images(img1_warped, img2, disp):
 
 def main():
     if (len(sys.argv) < 6):
-        print("Usage: python <script_name.py> <out_name> <img1_path> <img1_points_path> <img2_path> <img2_points_path> <warped_img1_path>")
+        print("Usage: python mosaic.py <out_name> <img1_path> <img1_points_path> <img2_path> <img2_points_path> <warped_img1_path>")
         return 
     
     out_name = sys.argv[1]

@@ -107,7 +107,7 @@ def warp_image(img, H, crop=True):
 
 def main():
     if (len(sys.argv) != 6):
-        print("Usage: python <script_name.py> <out_name> <img1_path> <img1_points_path> <img2_path> <img2_points_path>")
+        print("Usage: python warp_img.py <out_name> <img1_path> <img1_points_path> <img2_path> <img2_points_path>")
         return 
     
     out_name = sys.argv[1]
