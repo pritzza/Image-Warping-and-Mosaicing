@@ -1,6 +1,7 @@
+
 # Image Processing and Mosaicing Project
 
-This project provides tools for image processing, including point selection, image warping, rectification, and mosaicing. It consists of several Python scripts that work together to create image mosaics and perform related tasks.
+This project provides tools for image processing, including Harrison Corner Detection, point selection, image warping, rectification, and mosaicing. It consists of several Python scripts that work together to automatically create panoramic images and perform related tasks.
 
 ## Table of Contents
 1. [Requirements](#requirements)
@@ -10,6 +11,7 @@ This project provides tools for image processing, including point selection, ima
    - [Point Picker](#point-picker)
    - [Warp Image](#warp-image)
    - [Image Mosaicing](#image-mosaicing)
+   - [Auto Mosaic](#auto-mosaic)
    - [Image Rectification](#image-rectification)
 4. [File Descriptions](#file-descriptions)
 
@@ -37,6 +39,10 @@ This project provides tools for image processing, including point selection, ima
 ## Usage
 
 ### Overview Example
+
+For automatic mosaicing, simply run `python auto_mosaic.py <out_name> <image1_path> <image2_path> ... <imageN_path>`.
+
+For manual mosaicing, follow the steps below:
 
 First, place one or two images in the 'res' folder. For example, we'll use `cal_l.png` and `cal_r.png`.
 
@@ -98,7 +104,7 @@ python warp_img.py <out_name> <img1_path> <img1_points_path> <img2_path> <img2_p
 
 ### Image Mosaicing
 
-The `mosaic.py` script creates a mosaic from two images.
+The `mosaic.py` script creates a mosaic from two images with corresponding points explicitly specified.
 
 ```bash
 python mosaic.py <out_name> <img1_path> <img1_points_path> <img2_path> <img2_points_path> [<warped_img1_path>]
@@ -106,6 +112,18 @@ python mosaic.py <out_name> <img1_path> <img1_points_path> <img2_path> <img2_poi
 
 - If `warped_img1_path` is provided, it will use the pre-warped image instead of computing it.
 - The mosaiced image will be saved as `results/<out_name>.png`.
+
+### Auto Mosaic
+
+The `auto_mosaic.py` script automates the process of panoramic creation by allowing you to pass multiple images and automatically processes them into a single mosaic, no correspondence points required.
+
+```bash
+python auto_mosaic.py <out_name> <image1_path> <image2_path> ... <imageN_path>
+```
+
+- Replace `<out_name>` with the desired name for the output mosaic.
+- Add as many image paths as needed to create a mosaic.
+- The resulting mosaic will be saved as `results/<out_name>.png`.
 
 ### Image Rectification
 
@@ -122,8 +140,7 @@ python rectify.py <out_name> <img_path> <img_points_path> <width> <height>
 - `point_picker.py`: GUI tool for selecting corresponding points on images.
 - `warp_img.py`: Warps an image based on corresponding points.
 - `mosaic.py`: Creates an image mosaic from two input images.
+- `auto_mosaic.py`: Automates the creation of mosaics from multiple images.
 - `rectify.py`: Rectifies an image based on selected points.
 - `point_reader.py`: Utility for reading and writing point data.
 - `multi_resolution_blending.py`: Implements multi-resolution blending for smooth image compositing.
-
-For more detailed information on each script, please refer to the comments within the source code.
