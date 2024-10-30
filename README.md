@@ -40,7 +40,10 @@ This project provides tools for image processing, including Harrison Corner Dete
 
 ### Overview Example
 
-For automatic mosaicing, simply run `python auto_mosaic.py <out_name> <image1_path> <image2_path> ... <imageN_path>`.
+For automatic mosaicing, simply run:
+```bash
+python auto_mosaic.py <out_name> <image1_path> <image2_path> ... <imageN_path>
+```
 
 For manual mosaicing, follow the steps below:
 
