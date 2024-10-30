@@ -78,7 +78,12 @@ def compute_warped_image_bb(img, H):
     return dim, displacement
 
 # TODO: update to use scipy.interpolate.griddata
+import numpy as np
+
 def warp_image(img, H, crop=True):
+    # Add an alpha channel to the image if it doesn't already have one
+    if img.shape[2] == 3:  # If input is RGB, add an alpha channel
+        img = np.dstack([img, np.ones((img.shape[0], img.shape[1]), dtype=img.dtype) * 255])
 
     dim = (img.shape[1], img.shape[0])
     disp = (0, 0)
@@ -87,7 +92,8 @@ def warp_image(img, H, crop=True):
     width, height = dim[0], dim[1]
     dx, dy = disp[0], disp[1]
 
-    warped_img = np.zeros((height, width, img.shape[2]), dtype=img.dtype)
+    # Initialize an RGBA output image with full transparency
+    warped_img = np.zeros((height, width, 4), dtype=img.dtype)  # 4 channels: RGBA
 
     H_inv = np.linalg.inv(H)
 
@@ -99,9 +105,9 @@ def warp_image(img, H, crop=True):
             src_x, src_y = p[0] / w, p[1] / w
 
             if 0 <= src_x < img.shape[1] and 0 <= src_y < img.shape[0]:
-                # just nearest-neighbor sampling, needs to be improved
+                # Nearest-neighbor sampling
                 src_x, src_y = int(src_x), int(src_y)
-                warped_img[y, x] = img[src_y, src_x]
+                warped_img[y, x] = img[src_y, src_x]  # RGB channels
 
     return warped_img
 

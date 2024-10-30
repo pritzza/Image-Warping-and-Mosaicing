@@ -20,7 +20,7 @@ class PointEditor:
         self.ax.imshow(self.image)
         x = self.points[:, 0] * self.width
         y = self.points[:, 1] * self.height
-        self.scatter = self.ax.scatter(x, y, c='r', s=50)
+        self.scatter = self.ax.scatter(x, y, c='r', s=10)
         
         self.fig.canvas.mpl_connect('button_press_event', self.on_click)
         self.fig.canvas.mpl_connect('motion_notify_event', self.on_motion)
