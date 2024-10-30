@@ -171,8 +171,8 @@ def main():
         # warp img1
         adding_img_warped = warp_image(adding_img, H)
         adding_img_warped = np.clip(adding_img_warped, 0, 255).astype(np.uint8)
-        #cv2.imwrite(out_name + str(i) + "_warped.png", adding_img_warped)  # save intermdiate warped image
-        #print("Warped image saved to " + out_name + "_warped.png")
+        #cv2.imwrite("results/" + out_name + str(i) + "_warped.png", adding_img_warped)  # save intermdiate warped image
+        #print("Warped image saved to " + "results/" + out_name + "_warped.png")
 
         print("blending...")
 
@@ -180,15 +180,15 @@ def main():
         _, disp = compute_warped_image_bb(adding_img, H)
         blended_img = blend_images(adding_img_warped, base_img, disp)
         blended_img = np.clip(blended_img, 0, 255).astype(np.uint8)
-        #cv2.imwrite(out_name + str(i) + ".png", blended_img)
-        #print("Final blended image saved to " + out_name + ".png")
+        #cv2.imwrite("results/" + out_name + str(i) + ".png", blended_img)
+        #print("Final blended image saved to " + "results/" + out_name + ".png")
 
         mosaics.append(blended_img)
 
     # final result is going to be the last image in mosaics
     panorama = mosaics[-1]
     panorama[:, :, 3] = 255  # set alpha channel to 255
-    cv2.imwrite(out_name + ".png", panorama)
+    cv2.imwrite("results/" + out_name + ".png", panorama)
     print("Final blended image saved to " + out_name + ".png")
 
 main()
